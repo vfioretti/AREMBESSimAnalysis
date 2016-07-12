@@ -7,13 +7,14 @@
  email                : fioretti@iasfbo.inaf.it
  ----------------------------------------------
  Usage:
- python plotFirsovTest.py filedir N_file N_in theta_0 angle_bin
+ python plotFirsovTest.py filedir N_file N_in theta_0 energy_0 angle_bin
  ---------------------------------------------------------------------------------
  Parameters:
  - filedir = input path (string)
  - N_file = number of simulated files
  - N_in = number of simulated particles
  - theta_0 = incoming angle
+ - energy_0 = incoming energy
  - angle_bin = bin angle
  --------------------------------------------------------------------------------
  Caveats:
@@ -38,7 +39,8 @@ filedir = arg_list[1]
 N_fits = int(arg_list[2])
 N_in = int(arg_list[3])
 theta_0 = float(arg_list[4])
-angle_bin = float(arg_list[5])
+energy_0 = float(arg_list[5])
+angle_bin = float(arg_list[6])
 
 
 sphere_vol_id = 1002
@@ -100,9 +102,8 @@ else:
 
 
 def firsov_law(psi):
-	#return (3./(2.*np.pi))*((psi**(3./2.))/(1. + psi**3))
-	return (3./(2.*np.pi))*((((psi*theta_0)*(theta_0))**(3./2.))/((psi*theta_0)**3 + theta_0**3))
-
+	return (3./(2.*np.pi))*((psi**(3./2.))/(1. + psi**3))
+	
 # histograms for the slab
 N_array_out, bin_array_out = np.histogram(vecPsiOut, bins = n_bins_angle, range = (0, angle_max))
 N_array_out_norm = np.zeros(len(N_array_out))
@@ -138,7 +139,7 @@ ax.errorbar(angle_array, N_array_out_norm, xerr=err_angle, yerr=err_N_array_out,
 ax.set_xticklabels([])
 ax.plot(angle_array, N_model, label='Firsov model')
 
-ax.set_title('Soft proton scattering - slab test')
+ax.set_title('Soft proton slab test - E = '+str(energy_0)+' keV, $\Theta_{0}$ = '+str(theta_0))
 ax1.set_xlabel("$\Psi$")
 ax.set_ylabel("W($\Psi$)")
 #ax.set_xlim(0, 1000)
@@ -153,7 +154,7 @@ ax1.set_xlim(ax_range)
 ax1.errorbar(angle_array, ((N_array_out_norm-N_model)/N_array_out_norm)*100., xerr=err_angle, yerr=(err_N_array_out/N_array_out_norm)*100., fmt='.b', lw = 2, ecolor='black')
 ax1.plot([0, ax_range[1]], [0,0], '-k')
 ax1.set_ylabel("Residual [%]")
-ax1.set_ylim(-100., 100.)
+ax1.set_ylim(-100., 95.)
 
 #ax.errorbar(angle_array, N_array_out, xerr=err_angle)
 
