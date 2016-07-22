@@ -1,5 +1,5 @@
 """
- plotRemizTest.py  -  description
+ plotAngle.py  -  description
  ---------------------------------------------------------------------------------
  Plotting the angular distribution from the Remizovich slab test
  ---------------------------------------------------------------------------------
@@ -7,7 +7,7 @@
  email                : fioretti@iasfbo.inaf.it
  ----------------------------------------------
  Usage:
- python plotRemizTest.py filedir N_file N_in theta_0 angle_bin
+ python plotAngle.py filedir N_file N_in theta_0 energy_0 angle_bin model
  ---------------------------------------------------------------------------------
  Parameters:
  - filedir = input path (string)
@@ -40,7 +40,9 @@ filedir = arg_list[1]
 N_fits = int(arg_list[2])
 N_in = int(arg_list[3])
 theta_0 = float(arg_list[4])
-angle_bin = float(arg_list[5])
+energy_0 = float(arg_list[5])
+angle_bin = float(arg_list[6])
+model = arg_list[7]
 
 
 sphere_vol_id = 1002
@@ -67,11 +69,13 @@ for jfits in xrange(N_fits):
     MDZ_ent = tbdata.field('MDZ_ENT')
     MDY_ent = tbdata.field('MDY_ENT')
     MDX_ent = tbdata.field('MDX_ENT')
+    X_ent = tbdata.field('X_ENT')
+    part_id = tbdata.field('PARTICLE_ID')
 
     # ---------------------------------
 
 
-    where_sphere = np.where(vol_id == sphere_vol_id)
+    where_sphere = np.where((vol_id == sphere_vol_id) & (ene_ent < energy_0) & (part_id == 2212) & (X_ent < 0))
     evt_id_sphere = evt_id[where_sphere]
     ene_sphere = ene_ent[where_sphere]
     mdz_sphere = MDZ_ent[where_sphere]
@@ -92,22 +96,22 @@ for jfits in xrange(N_fits):
 # SPHERE
 N_out = len(vecEnergyOut)
 vecEnergyOut = np.array(vecEnergyOut)
-vecPsiOut = np.array(vecPsiOut)
-vecChiOut = np.array(vecChiOut)
+vecThetaOut = np.array(vecThetaOut)
+vecPhiOut = np.array(vecPhiOut)
 
 
 if (N_out > 1):
-    angle_min_psi = np.min(vecPsiOut)
-    angle_max_psi = np.max(vecPsiOut)
-    n_bins_psi = int((angle_max_psi - angle_min_psi)/angle_bin)
-    if (n_bins_psi < 1):
-    	n_bins_psi = 100
+    angle_min_phi = np.min(vecPhiOut)
+    angle_max_phi = np.max(vecPhiOut)
+    n_bins_phi = int((angle_max_phi - angle_min_phi)/angle_bin)
+    if (n_bins_phi < 1):
+    	n_bins_phi = 100
     
-    angle_min_chi = np.min(vecChiOut)
-    angle_max_chi = np.max(vecChiOut)
-    n_bins_chi = int((angle_max_chi - angle_min_chi)/angle_bin)
-    if (n_bins_chi < 1):
-    	n_bins_chi = 100
+    angle_min_theta = np.min(vecThetaOut)
+    angle_max_theta = np.max(vecThetaOut)
+    n_bins_theta = int((angle_max_theta - angle_min_theta)/angle_bin)
+    if (n_bins_theta < 1):
+    	n_bins_theta = 100
 else:
     print "NO PARTICLES TO PLOT!!!!"
 
@@ -125,8 +129,8 @@ gs = gridspec.GridSpec(1, 1, height_ratios=[4,1])
 gs.update(hspace=0.0)
 ax = plt.subplot(gs[0])
 
-# Psi
-N_array_out, bin_array_out = np.histogram(vecPsiOut, bins = n_bins_psi, range = (0, angle_max_psi))
+# Phi
+N_array_out, bin_array_out = np.histogram(vecPhiOut, bins = n_bins_phi, range = (0, angle_max_phi))
 N_array_out_norm = np.zeros(len(N_array_out))
 err_N_array_out = np.zeros(len(N_array_out))
 err_angle = np.zeros(len(N_array_out))
@@ -144,12 +148,12 @@ for jn in xrange(len(N_array_out)):
 
 
 # out angle distribution
-ax.bar(left_angle_array, N_array_out_norm, width=2.*err_angle, edgecolor="lightblue", facecolor='lightblue', lw = 2, label='Psi')
-ax.errorbar(angle_array, N_array_out_norm, xerr=err_angle, yerr=err_N_array_out, capsize=0, fmt='none', lw = 0.5, ecolor='black')
+ax.bar(left_angle_array, N_array_out_norm, width=2.*err_angle, edgecolor="lightblue", facecolor='lightblue', lw = 2, label='Phi', alpha=0.7)
+ax.errorbar(angle_array, N_array_out_norm, xerr=err_angle, yerr=err_N_array_out, capsize=0, fmt='o', color='lightblue', lw = 1, ecolor='black')
 
 
-# Chi
-N_array_out, bin_array_out = np.histogram(vecChiOut, bins = n_bins_chi, range = (0, angle_max_chi))
+# Theta
+N_array_out, bin_array_out = np.histogram(vecThetaOut, bins = n_bins_theta, range = (0, angle_max_theta))
 N_array_out_norm = np.zeros(len(N_array_out))
 err_N_array_out = np.zeros(len(N_array_out))
 err_angle = np.zeros(len(N_array_out))
@@ -166,13 +170,15 @@ for jn in xrange(len(N_array_out)):
 
 
 # out angle distribution
-ax.bar(left_angle_array, N_array_out_norm, width=2.*err_angle, edgecolor="yellow", facecolor='yellow', lw = 2, label='Chi')
-ax.errorbar(angle_array, N_array_out_norm, xerr=err_angle, yerr=err_N_array_out, capsize=0, fmt='none', lw = 0.5, ecolor='black')
+ax.bar(left_angle_array, N_array_out_norm, width=2.*err_angle, edgecolor="yellow", facecolor='yellow', lw = 2, label='Theta', alpha=0.3)
+ax.errorbar(angle_array, N_array_out_norm, xerr=err_angle, yerr=err_N_array_out, capsize=0, fmt='o', color='yellow', lw = 1, ecolor='black')
 
-
+ax.set_xlabel("[deg]")
+ax.set_ylabel("Norm. counts deg$^{-1}$")
 
 ax.legend(numpoints=1, loc=1)
-
+title = str(N_in)+" events, "+str(energy_0)+" keV, "+str(theta_0)+" deg., "+model+" model"
+ax.set_title(title)
 
 plt.show()
 hdulist.close()
