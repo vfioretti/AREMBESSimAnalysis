@@ -296,7 +296,7 @@ for iel in xrange(len(vecEnergyOut_sel)):
 	f_out_energy.write(str(vecThetaOut_sel[iel])+' '+str(vecPhiOut_sel[iel])+' '+str(vecEnergyOut_sel[iel])+'\n')
 
 
-ax.fill_between(theta_exp, eff_exp_min, eff_exp_max)
+if (energy_0 > 50): ax.fill_between(theta_exp, eff_exp_min, eff_exp_max)
 
 ax.set_yscale("log")
 ax.set_xlabel("Scattering angle [deg.]")

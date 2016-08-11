@@ -170,15 +170,25 @@ for jexp in xrange(N_exp):
                 ene_loss_max = [13. + 10, 22. + 10., 32. + 10., 35. + 10., 40. + 10.]
                 ene_loss_min = [13. - 10, 22. - 10., 32. - 10., 35. - 10., 40. - 10.]
 	if (theta_0_array[jexp] == 0.51):
-		theta_exp = [0.69, 1.18, 1.67, 2.41, 3.14]
+		theta_exp = [1.18, 1.67, 2.41, 3.14]
+                ene_loss_max = [22. + 10, 30. + 10., 38. + 10., 36. + 10.]
+                ene_loss_min = [22. - 10, 30. - 10., 38. - 10., 36. - 10.]
 	if (theta_0_array[jexp] == 0.67):
 		theta_exp = [1.18, 1.67, 2.41, 3.14]
+                ene_loss_max = [22. + 10, 28. + 10., 34. + 10., 40. + 10.]
+                ene_loss_min = [22. - 10, 28. - 10., 34. - 10., 40. - 10.]
 	if (theta_0_array[jexp] == 0.89):
 		theta_exp = [1.68, 2.42, 3.15, 4.13]
+                ene_loss_max = [24. + 10, 28. + 10., 32. + 10., 33. + 10.]
+                ene_loss_min = [24. - 10, 28. - 10., 32. - 10., 33. - 10.]
 	if (theta_0_array[jexp] == 1.06):
 		theta_exp = [2.42, 3.15, 4.13]
+                ene_loss_max = [38. + 10, 41. + 10., 43. + 10.]
+                ene_loss_min = [38. - 10, 41. - 10., 43. - 10.]
 	if (theta_0_array[jexp] == 1.23):
 		theta_exp = [2.42, 3.15, 4.13]
+                ene_loss_max = [38. + 10, 42. + 10., 44. + 10.]
+                ene_loss_min = [38. - 10, 42. - 10., 44. - 10.]
     if (energy_0 == 500):
 	if (theta_0_array[jexp] == 0.33):
 		theta_exp = [0.66, 1.15, 1.64, 2.37, 3.11]
